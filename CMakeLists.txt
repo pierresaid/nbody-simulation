@@ -8,9 +8,9 @@ find_package (GLUT REQUIRED)
 
 set(CMAKE_C_STANDARD 99)
 
-set(HEADERS )
+set(HEADERS include/config.h include/body.h include/data.h)
 
-set(SOURCES src/opencl_setup.c include/opencl_setup.h)
+set(SOURCES src/setup.c include/setup.h)
 
 #add_compile_definitions(OPENCL_HOST=true)
 
@@ -25,5 +25,5 @@ add_executable(nbody src/main.c ${HEADERS} ${SOURCES})
 
 #find_package (GLM REQUIRED)
 
-target_link_libraries(nbody ${GLUT_LIBRARIES} ${OpenCL_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries(nbody ${GLUT_LIBRARIES} ${OpenCL_LIBRARIES} ${OPENGL_LIBRARIES} m)
 target_include_directories(nbody PRIVATE  ${GLUT_INCLUDE_DIR} ${OPENCL_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})

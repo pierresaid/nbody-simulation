@@ -2,9 +2,9 @@
 // Created by psaid on 28/02/19.
 //
 
-#include "../include/opencl_setup.h"
+#include "../include/setup.h"
 
-int create_program(cl_program *program, cl_context *context, cl_kernel *kernel, cl_command_queue * queue) {
+int create_program(cl_program *program, cl_context *context, cl_kernel *kernel, cl_command_queue *queue) {
     char *value;
     size_t valueSize;
     cl_uint platformCount;
@@ -76,4 +76,47 @@ int create_program(cl_program *program, cl_context *context, cl_kernel *kernel, 
     }
     free(programBuffer);
 
+}
+
+void keyboardCB(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_F1:
+            glutLeaveMainLoop();
+            return;
+    }
+    glutPostRedisplay();
+}
+
+
+void setup_opengl(s_config *config) {
+    int argc = 1;
+    char *argv[1] = {(char*)"Something"};
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE);
+    glutInitWindowSize(1920, 1080);
+    glutCreateWindow("Randomly generated points");
+    glutSpecialFunc(keyboardCB);
+    glClearColor(0, 0, 0, 0);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, config->map_size, 0.0, config->map_size);
+}
+
+s_body *setup_bodies(s_config *config) {
+    s_body *bodies;
+
+    bodies = malloc(sizeof(s_body) * config->nb_bodies);
+    int i = 0;
+    while (i < config->nb_bodies) {
+//        bodies[i] = malloc(sizeof(s_body));
+        bodies[i].x = config->map_size / 10 + rand() % (config->map_size - ( 2 * config->map_size / 10));
+        bodies[i].y = config->map_size / 10 + rand() % (config->map_size - ( 2 * config->map_size / 10));
+        bodies[i].speed_x = 0;
+        bodies[i].speed_y = 0;
+        bodies[i].mass = 10000000;
+        ++i;
+    }
+    return bodies;
 }
