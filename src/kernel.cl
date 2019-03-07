@@ -13,7 +13,7 @@ typedef struct body {
 #define SOFTENER 2000000
 #define GRAVITY 0.67742
 
-__kernel void SAXPY (__global s_body *bodies, int nb_bodies)
+__kernel void compute_forces (__global s_body *bodies, int nb_bodies)
 {
     int idx = get_global_id (0);
     int i = 0;
@@ -30,5 +30,7 @@ __kernel void SAXPY (__global s_body *bodies, int nb_bodies)
         ++i;
 
     }
+    bodies[idx].x += bodies[idx].speed_x;
+    bodies[idx].y += bodies[idx].speed_y;
 }
 

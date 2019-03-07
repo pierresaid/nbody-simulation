@@ -64,7 +64,7 @@ int create_program(cl_program *program, cl_context *context, cl_kernel *kernel, 
     }
 
 
-    *kernel = clCreateKernel(*program, "SAXPY", &err);
+    *kernel = clCreateKernel(*program, "compute_forces", &err);
     if (err != 0) {
         printf("Error building kernel\n");
         exit(1);
@@ -79,31 +79,6 @@ int create_program(cl_program *program, cl_context *context, cl_kernel *kernel, 
 
 }
 
-void keyboardCB(int key, int x, int y) {
-    switch (key) {
-        case GLUT_KEY_F1:
-            glutLeaveMainLoop();
-            return;
-    }
-    glutPostRedisplay();
-}
-
-
-void setup_opengl(s_config *config) {
-    int argc = 1;
-    char *argv[1] = {(char*)"Something"};
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE);
-    glutInitWindowSize(1920, 1080);
-    glutCreateWindow("nbody-simulator");
-    glutSpecialFunc(keyboardCB);
-    glClearColor(0, 0, 0, 0);
-
-    glClear(GL_COLOR_BUFFER_BIT);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0.0, config->map_size, 0.0, config->map_size);
-}
 
 s_body *setup_bodies(s_config *config) {
     s_body *bodies;
