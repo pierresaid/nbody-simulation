@@ -34,55 +34,21 @@ const float gravity = 0.66742;
 
 void process() {
 
-
-//    int i = 0;
-//    int j;
-//    while (i < data.config.nb_bodies) {
-//        j = 0;
-//        while (j < data.config.nb_bodies) {
-////            if (!(data.bodies[i]->x == data.bodies[j]->x && data.bodies[i]->y == data.bodies[j]->y)) {
-//
-//            float dx = data.bodies[i].x - data.bodies[j].x;
-//            float dy = data.bodies[i].y - data.bodies[j].y;
-//            double r = sqrt((dx) * (dx) +
-//                            (dy) * (dy) + s_soft);
-//            if (r > 0) {
-//                double k = gravity * data.bodies[j].mass / (r * r * r);
-//
-////                    printf("%f\n", r);
-//                data.bodies[i].speed_x += k * (data.bodies[j].x - data.bodies[i].x);
-//                data.bodies[i].speed_y += k * (data.bodies[j].y - data.bodies[i].y);
-//            } else {
-////                force.x = force.y = 0;
-//            }
-////            }
-//
-//            ++j;
-//        }
-//        ++i;
-//
-//    }
-
     int i = 0;
-//    i = 0;
     while (i < data.config.nb_bodies) {
         data.bodies[i].x += data.bodies[i].speed_x;
         data.bodies[i].y += data.bodies[i].speed_y;
         ++i;
     }
 
-//    CheckError (error);
-
-//printf("slaope : %u\n", sizeof(s_body) * data.config.nb_bodies);
     clEnqueueWriteBuffer(queue, bodies_buffer, CL_TRUE, 0, sizeof(s_body) * data.config.nb_bodies, data.bodies, 0, NULL,
                          NULL);
 
 
     cl_int err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &bodies_buffer);
-//    cl_int err = clSetKernelArg(kernel, 0, sizeof(s_body) * data.config.nb_bodies, bodies_buffer);
+    err = clSetKernelArg(kernel, 1, sizeof(int), &data.config.nb_bodies);
     if (err != CL_SUCCESS)
     {
-//        CL_INVALID_ARG_INDEX
         printf("Set Arg error : %d\n", err);
         exit(0);
     }
@@ -106,16 +72,18 @@ int main(int argc, char **argv) {
     cl_program program;
     cl_context context;
 
-    data.config.nb_bodies = 10000;
+    data.config.nb_bodies = 7000;
     globalWorkSize[0] = (size_t) data.config.nb_bodies;
     data.config.map_size = 100000;
     create_program(&program, &context, &kernel, &queue);
     setup_opengl(&data.config);
     data.bodies = setup_bodies(&data.config);
 
-    data.bodies[0].x = 2 * (data.config.map_size / 10);
-    data.bodies[0].y = 2 * (data.config.map_size / 10);
-    data.bodies[0].mass = 100000000;
+    data.bodies[0].x = data.config.map_size - (4 * (data.config.map_size / 10));
+    data.bodies[0].y = data.config.map_size - (4 * (data.config.map_size / 10));
+    data.bodies[0].mass = 1300000000;
+    data.bodies[0].speed_x = 0;
+    data.bodies[0].speed_y = 0;
 
     bodies_buffer = clCreateBuffer(context,
                                    CL_MEM_READ_WRITE,

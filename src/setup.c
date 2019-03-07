@@ -2,6 +2,7 @@
 // Created by psaid on 28/02/19.
 //
 
+#include <math.h>
 #include "../include/setup.h"
 
 int create_program(cl_program *program, cl_context *context, cl_kernel *kernel, cl_command_queue *queue) {
@@ -94,7 +95,7 @@ void setup_opengl(s_config *config) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
     glutInitWindowSize(1920, 1080);
-    glutCreateWindow("Randomly generated points");
+    glutCreateWindow("nbody-simulator");
     glutSpecialFunc(keyboardCB);
     glClearColor(0, 0, 0, 0);
 
@@ -111,11 +112,14 @@ s_body *setup_bodies(s_config *config) {
     int i = 0;
     while (i < config->nb_bodies) {
 //        bodies[i] = malloc(sizeof(s_body));
-        bodies[i].x = config->map_size / 10 + rand() % (config->map_size - ( 2 * config->map_size / 10));
-        bodies[i].y = config->map_size / 10 + rand() % (config->map_size - ( 2 * config->map_size / 10));
-        bodies[i].speed_x = 0;
-        bodies[i].speed_y = 0;
-        bodies[i].mass = 10000000;
+//        bodies[i].x = config->map_size / 10 + rand() % (config->map_size - ( 2 * config->map_size / 10));
+        bodies[i].x = config->map_size / 10 + rand() % (config->map_size - ( 6 * config->map_size / 10));
+        bodies[i].y = config->map_size / 10 + rand() % (config->map_size - ( 6 * config->map_size / 10));
+
+
+        bodies[i].speed_x = 80;
+        bodies[i].speed_y = -40;
+        bodies[i].mass = 1;
         ++i;
     }
     return bodies;
